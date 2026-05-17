@@ -1,0 +1,4 @@
+Flask==3.0.2
+numpy==1.24.3
+onnxruntime==1.16.0
+transformers==4.30.0

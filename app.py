@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import numpy as np
 import pickle
-from sklearn.metrics.pairwise import cosine_similarity
+from numpy.linalg import norm
 from onnxruntime import InferenceSession
 from transformers import AutoTokenizer
 
@@ -36,7 +36,11 @@ def get_embedding(text):
 
 def predict_disease(user_input):
     user_embedding = get_embedding(user_input)
-    similarities = cosine_similarity(user_embedding, embeddings)[0]
+    
+    # Cosine similarity using numpy
+    similarities = np.dot(embeddings, user_embedding.T) / (norm(embeddings, axis=1, keepdims=True) * norm(user_embedding))
+    similarities = similarities.flatten()
+    
     top_idx = np.argmax(similarities)
     top_score = similarities[top_idx]
 
